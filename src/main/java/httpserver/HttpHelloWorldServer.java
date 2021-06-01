@@ -15,7 +15,7 @@ public class HttpHelloWorldServer {
     static final boolean SSL = System.getProperty("ssl") != null;
 
     static final int PORT =
-            Integer.parseInt(System.getProperty("port", SSL? "8443" : "8080"));
+            Integer.parseInt(System.getProperty("port", SSL? "8443" : "7878"));
 
     public static void main(String[] args) throws Exception{
         final SslContext sslCtx;
@@ -31,7 +31,7 @@ public class HttpHelloWorldServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap b = new ServerBootstrap();
-            b.option(ChannelOption.SO_BACKLOG,1024);// ChannelOption.SO_BACKLOG : 동시에 수용가능한 소켓 연결수 설정
+            b.option(ChannelOption.SO_BACKLOG,1024); // ChannelOption.SO_BACKLOG : 동시에 수용가능한 소켓 연결수 설정
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))

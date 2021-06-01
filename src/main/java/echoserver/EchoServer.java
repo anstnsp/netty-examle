@@ -45,15 +45,8 @@ public class EchoServer {
                         protected void initChannel(SocketChannel ch) throws Exception { //클라이언트 소켓 채널이 생성될때 자동으로 호출.
                             ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
                             ch.pipeline().addLast(serverHandler);			//serverHandler 을 pipeline으로 설정 한다.
-
                         }
                     });
-//                    .childHandler(new ChannelInitializer<SocketChannel>() {
-//                        @Override
-//                        protected void initChannel(SocketChannel ch) throws Exception {
-//                            ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
-//                        }
-//                    });
 
             ChannelFuture f = b.bind().sync();	//서버를 비동기 식으로 바인딩 한다. sync() 는 바인딩이 완료되기를 대기한다.
             /**
