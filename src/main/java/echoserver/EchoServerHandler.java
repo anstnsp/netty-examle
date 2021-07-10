@@ -40,7 +40,7 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-
+        System.out.println("channelRead 완료");
         ctx.writeAndFlush(Unpooled.EMPTY_BUFFER) //대기중인 메시지를 원격피어로 플러시하고 채널을 닫음.
                 .addListener(ChannelFutureListener.CLOSE);
 

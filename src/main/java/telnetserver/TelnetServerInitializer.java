@@ -1,5 +1,7 @@
 package telnetserver;
 
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -7,6 +9,8 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 public class TelnetServerInitializer extends ChannelInitializer<SocketChannel> {
 
@@ -29,7 +33,29 @@ public class TelnetServerInitializer extends ChannelInitializer<SocketChannel> {
 
         pipeline.addLast(DECODER); //전역 상수에 등록된 StringDecoder를 채널 파이프라인의 두번째 데이터 핸들러로 등록.
         pipeline.addLast(ENCODER); //전역 상수에 등록된 StringEncoder를 채널 파이프라인의 세번째데이터 핸들러로 등록.
+//        pipeline.addLast(new IdleStateHandler(3,0,0, TimeUnit.SECONDS));
+//        pipeline.addLast(new HeartbeatHandler());
         pipeline.addLast(SERVER_HANDLER); //TelnetServerHandler를 네번째 데이터 핸들러로 등록.
+    }
+
+
+    public class HeartbeatHandler extends ChannelDuplexHandler {
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+            System.out.println("아이들이벤트발생!!");
+            if (evt instanceof IdleStateEvent) {
+                IdleStateEvent e = (IdleStateEvent) evt ;
+                if(e.state() == IdleState.READER_IDLE) {
+                    System.out.println("리더아이들걸렸다.");
+                    ctx.close();
+                } else if(e.state() == IdleState.WRITER_IDLE) {
+                    System.out.println("라이트아이들걸렸다.");
+                    ctx.writeAndFlush("ping !!");
+                } else {
+                    System.out.println("여긴 다른곳");
+                }
+            }
+        }
     }
 
 }

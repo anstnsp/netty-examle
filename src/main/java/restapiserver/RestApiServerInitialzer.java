@@ -1,5 +1,7 @@
 package restapiserver;
 
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -7,6 +9,11 @@ import io.netty.handler.codec.http.HttpContentCompressor;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
+
+import java.util.concurrent.TimeUnit;
 
 public class RestApiServerInitialzer extends ChannelInitializer<SocketChannel> {
 
@@ -22,11 +29,14 @@ public class RestApiServerInitialzer extends ChannelInitializer<SocketChannel> {
          * 인자로 입력된 65536은 한꺼번에 처리 가능한 최대 데이터 크기다.
          * 65Kbyte 이상의 데이터가 하나의 http요청으로 수신되면 TooLongFrameException예외가 발생한다.
          */
+        pipeline.addLast(new IdleStateHandler(3,0,0, TimeUnit.SECONDS));
+        pipeline.addLast(new HeartbeatHandler());
         pipeline.addLast(new HttpObjectAggregator(65536));
         pipeline.addLast(new HttpResponseEncoder()); //수신된 http요청의 처리결과를 클라이언트로 전송할 때 http프로토콜로 변환해주는 인코더.
         pipeline.addLast(new HttpContentCompressor()); //http프로토콜로 송수신되는 http 본문 데이터를 gzip압축 알고리즘을 사용해 압축과 압축해제 한다.(인바운드,아웃바운드 모두에서 호출)
         //클라이언트로부터 수신된 http데이터에서 헤더와 데이터 값을 추출하여 토큰 발급과 같은 업무
         //처리 클래스로 분기하는 클래스로써 api서버의 컨트롤러 역할을 수행한다.
+
         pipeline.addLast(new HttpChannelHandler()); //실제 FullHttpMessage 객체의 값을 확인하여 로직 처리 하는 곳.
 
         //클라이언트로부터 데이터를 수신했을 때데이터 핸들러는
@@ -36,4 +46,24 @@ public class RestApiServerInitialzer extends ChannelInitializer<SocketChannel> {
         //ApiRequestParser -> HttpContentCompressor -> HttpRespnoseEncoder 순서이다.
 
     }
+
+    public class HeartbeatHandler extends ChannelDuplexHandler {
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+            System.out.println("아이들이벤트발생!!");
+            if (evt instanceof IdleStateEvent) {
+                IdleStateEvent e = (IdleStateEvent) evt ;
+                if(e.state() == IdleState.READER_IDLE) {
+                    System.out.println("리더아이들걸렸다.");
+                    ctx.close();
+                } else if(e.state() == IdleState.WRITER_IDLE) {
+                    System.out.println("라이트아이들걸렸다.");
+                    ctx.writeAndFlush("ping !!");
+                } else {
+                    System.out.println("여긴 다른곳");
+                }
+            }
+        }
+    }
+
 }
