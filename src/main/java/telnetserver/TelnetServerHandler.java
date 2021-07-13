@@ -42,7 +42,7 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
     /**
      * [데이터 수신을 알리는 channelRead0 이벤트]
      * channelRead0의 두번째인수의 타입이 String인 이유는 TelnetServerHandler가 String제너릭을 사용한
-     * SimpleCHannelInboundHandler를 상속받고 있기 때문이다.
+     * SimpleCHannelInboundHandler를 상속받고 있기 때문이다. >> extends SimpleChannelInboundHandler<String> 부분
      * Simple
      * @param ctx
      * @param request

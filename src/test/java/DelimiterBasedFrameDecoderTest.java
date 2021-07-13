@@ -60,7 +60,7 @@ public class DelimiterBasedFrameDecoderTest {
          * 서버가 읽음  ->> embededChannel.readInbound()
          *
          * 디코더만 등록된 채널에는 아웃바운트 이벤트를 발생시키는 writeOutbound(), readOutbound()를 해도 아무런 데이터를 얻을 수 없다.
-         * 그러므로 writeOutbound()와 readOutboud()는인코더를 테스트하는데 사용한다.
+         * 그러므로 writeOutbound()와 readOutbound()는인코더를 테스트하는데 사용한다.
          */
     }
 
