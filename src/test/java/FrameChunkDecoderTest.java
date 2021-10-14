@@ -5,8 +5,7 @@ import io.netty.handler.codec.TooLongFrameException;
 import onlytest.FrameChunkDecoder;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class FrameChunkDecoderTest {
@@ -35,7 +34,7 @@ public class FrameChunkDecoderTest {
          */
         try {
             channel.writeInbound(input.readBytes(4));
-//            Assert.error(); //예외가 발생하지 않은 경우 이 어설션이적용되고 테스트가 실패한다.
+            fail();//예외가 발생하지 않은 경우 이 어설션이적용되고 테스트가 실패한다.
         } catch(TooLongFrameException e) {
             //예상된 예외
             System.out.println(e);

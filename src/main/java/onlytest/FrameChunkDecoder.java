@@ -13,7 +13,7 @@ public class FrameChunkDecoder extends ByteToMessageDecoder {
     private final int maxFrameSize;
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         int readableBytes = in.readableBytes();//생성할 프레임의 최대 허용 길이를 지정.
         if (readableBytes > maxFrameSize) { //프레임이 너무 큰경우 폐기하고 TooLongFrameException을 생성.
             //바이트를 폐기

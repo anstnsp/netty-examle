@@ -27,7 +27,7 @@ public class TelnetServerHandlerV3Test {
             builder1
                     .append(InetAddress.getLocalHost().getHostName())
                     .append(" 서버에 접속하셨습니다!\r\n");
-            builder2.append("현재 시간은 ")
+            builder2.append("sdf현재 시간은 ")
                     .append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")))
                     .append(" 입니다.\r\n");
 
