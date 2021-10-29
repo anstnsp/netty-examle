@@ -8,11 +8,15 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -115,6 +119,49 @@ public class Base64EncoderTest {
         logger.warn("[sdf] : {}", sb);
         logger.error("[sdf] : {}", sb);
         logger.info("ss {}/{}", a, b);
+    }
+
+    @Test
+    public void ffffasdfsadf() {
+        StockMasterResponse res = new StockMasterResponse();
+
+        StockMasterData data1 = new StockMasterData("1");
+        StockMasterData data2 = new StockMasterData("2");
+        StockMasterData data3 = new StockMasterData("3");
+        StockMasterData data4 = new StockMasterData("4");
+        StockMasterData data5 = new StockMasterData("5");
+
+        res.setStocksList(Arrays.asList(data1,data2,data3,data4));
+
+        for (StockMasterData data : res.getStocksList()) {
+            System.out.println(data.getTickerSymbol());
+        }
+    }
+    @Test
+    public void fff13123fasdfsadf() throws ParseException {
+//        System.out.println(SecurityGroup.isEtf(null));
+//        System.out.println(SecurityGroup.isEtf(SecurityGroup.ETF));
+//        System.out.println(SecurityGroup.isEtf(SecurityGroup.ETN));
+        Date d = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(df.format(d));
+
+        Calendar openTime = Calendar.getInstance();
+
+        String openingTime = "09:00";
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        Date date = format.parse(openingTime);
+        cal.setTime(date);
+        System.out.println(date);
+
+        openTime.set(Calendar.HOUR_OF_DAY, cal.get(Calendar.HOUR_OF_DAY));
+        openTime.set(Calendar.MINUTE, cal.get(Calendar.MINUTE));
+
+        System.out.println("성공 : OpenTime(" + openTime.get(Calendar.HOUR_OF_DAY) + ":" + openTime.get(Calendar.MINUTE) + ")");
+
+        System.out.println(SecurityGroup.DR);
+        System.out.println(SecurityGroup.FOREIGN_ETF.name());
     }
 
 }
